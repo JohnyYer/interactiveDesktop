@@ -1,9 +1,10 @@
 <template>
   <div class="desktop">
     <h1>{{ msg }}</h1>
-    <interactive-window></interactive-window>
-    <interactive-window></interactive-window>
-    <interactive-window></interactive-window>
+    <interactive-window :width="300" :height="100" :top="100" title="Title 1"></interactive-window>
+    <interactive-window :width="300" :height="100" :left="300" :top="100" title="Title 2"></interactive-window>
+    <interactive-window :width="300" :height="100" :left="300" :top="100" title="Title 3"></interactive-window>
+    <interactive-window :width="300" :height="100" :left="300" :top="100" title="Title 4"></interactive-window>
   </div>
 </template>
 
