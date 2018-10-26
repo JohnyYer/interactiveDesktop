@@ -29,7 +29,8 @@ export default {
     height: {type: Number, default: 100},
     left: {type: Number, default: 0},
     top: {type: Number, default: 0},
-    title: {type: String, default: 'Default title'}
+    title: {type: String, default: 'Default title'},
+    id: {type: Number}
   },
   data: function () {
     return {
