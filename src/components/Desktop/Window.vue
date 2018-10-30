@@ -1,20 +1,20 @@
 <template>
     <vue-draggable-resizable
       class="resizable-window"
-      :w="width"
-      :h="height"
-      :x = "left"
-      :y = "top"
+      :w="windowSettings.width"
+      :h="windowSettings.height"
+      :x = "windowSettings.leftIndent"
+      :y = "windowSettings.topIndent"
       drag-handle=".resizable-window__header"
-      v-on:dragging="onDrag"
-      v-on:resizing="onResize"
+      @dragstop="onDragStop"
+      @resizestop="onResizeStop"
       :parent="true">
         <div class="resizable-window__header">
-          <i class="window close icon red"></i>
-          <span class="heading">{{title}}</span>
+          <i class="window close icon red" @click="$emit('remove-window', windowSettings.id)"></i>
+          <span class="heading">{{windowSettings.title}}</span>
         </div>
         <div class="resizable-window__content">
-          <p>Window with params <b>height: </b>{{computed.height}} <b>width: </b>{{computed.width}}</p>
+          <p>Window with params <b>height: </b>{{windowSettings.height}} <b>width: </b>{{windowSettings.width}}</p>
         </div>
     </vue-draggable-resizable>
 </template>
@@ -30,27 +30,42 @@ export default {
     left: {type: Number, default: 0},
     top: {type: Number, default: 0},
     title: {type: String, default: 'Default title'},
-    id: {type: Number}
+    id: {type: String}
   },
   data: function () {
     return {
-      computed: {
+      windowSettings: {
+        id: this.id,
         width: this.width,
         height: this.height,
-        left: this.left,
-        top: this.top,
+        leftIndent: this.left,
+        topIndent: this.top,
         title: this.title
       }
     }
   },
+  beforeMount () {
+    if (localStorage.getItem('windows')) {
+      const windows = JSON.parse(localStorage.getItem('windows'))
+      this.windowSettings = windows.find(el => el.id === this.windowSettings.id)
+    }
+  },
   methods: {
-    onDrag: function (left, top) {
-      this.computed.left = left
-      this.computed.top = top
+    onDragStop (left, top) {
+      this.windowSettings.leftIndent = left
+      this.windowSettings.topIndent = top
+      this.saveWindowSettings()
     },
-    onResize: function (x, y, w, h) {
-      this.computed.height = h
-      this.computed.width = w
+    onResizeStop (left, top, width, height) {
+      this.windowSettings.width = width
+      this.windowSettings.height = height
+      this.saveWindowSettings()
+    },
+    saveWindowSettings () {
+      let storedWindows = JSON.parse(localStorage.getItem('windows'))
+      let currentWindowIndex = storedWindows.findIndex(el => el.id === this.windowSettings.id)
+      storedWindows[currentWindowIndex] = this.windowSettings
+      localStorage.setItem('windows', JSON.stringify(storedWindows))
     }
   }
 }

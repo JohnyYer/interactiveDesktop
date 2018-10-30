@@ -7,7 +7,8 @@
                         :top="window.topIndent"
                         :left="window.leftIndent"
                         :title="window.title"
-                        :id="window.id">
+                        :id="window.id"
+                        v-on:remove-window="onWindowRemove">
     </interactive-window>
   </div>
 </template>
@@ -16,7 +17,7 @@
 import InteractiveWindow from '@/components/Desktop/Window'
 const WINDOWS_SETTINGS = [
   {
-    'id': 1,
+    'id': 'uID1',
     'width': 300,
     'height': 100,
     'topIndent': 100,
@@ -24,28 +25,28 @@ const WINDOWS_SETTINGS = [
     'title': 'Title 1'
   },
   {
-    'id': 2,
+    'id': 'uID2',
     'width': 300,
     'height': 100,
     'topIndent': 300,
     'leftIndent': 300,
-    'title': 'Title 1'
+    'title': 'Title 2'
   },
   {
-    'id': 3,
+    'id': 'uID3',
     'width': 300,
     'height': 100,
     'topIndent': 100,
     'leftIndent': 300,
-    'title': 'Title 1'
+    'title': 'Title 3'
   },
   {
-    'id': 4,
+    'id': 'uID4',
     'width': 300,
     'height': 100,
     'topIndent': 100,
     'leftIndent': 300,
-    'title': 'Title 1'
+    'title': 'Title 4'
   }
 ]
 
@@ -57,12 +58,20 @@ export default {
   data () {
     return {
       msg: 'Dynamic desktop!',
-      windows: WINDOWS_SETTINGS
+      windows: localStorage.getItem('windows') ? JSON.parse(localStorage.getItem('windows')) : WINDOWS_SETTINGS
     }
   },
   mounted () {
-    if (localStorage.windowsSettings) {
-
+    this.updateLocalStorage()
+  },
+  methods: {
+    updateLocalStorage () {
+      localStorage.setItem('windows', JSON.stringify(this.windows))
+    },
+    onWindowRemove (id) {
+      let removedWindowIndex = this.windows.findIndex(el => el.id === id)
+      this.windows.splice(removedWindowIndex, 1)
+      this.updateLocalStorage()
     }
   }
 }
