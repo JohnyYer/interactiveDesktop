@@ -1,5 +1,5 @@
 <template>
-  <h2>Transaction Info!</h2>
+  <h2>Transaction Info</h2>
 </template>
 
 <script>

@@ -1,6 +1,7 @@
 <template>
-  <div class="desktop">
+  <div>
     <h1>{{ msg }}</h1>
+    <div class="ui segment desktop">
     <interactive-window v-for="window in windows" :key="window.id"
                         :width="window.width"
                         :height="window.height"
@@ -11,6 +12,7 @@
                         v-on:remove-window="onWindowRemove">
     </interactive-window>
   </div>
+  </div>
 </template>
 
 <script>
@@ -20,7 +22,7 @@ const WINDOWS_SETTINGS = [
     'id': 'uID1',
     'width': 300,
     'height': 100,
-    'topIndent': 100,
+    'topIndent': 0,
     'leftIndent': 0,
     'title': 'Title 1'
   },
@@ -28,24 +30,24 @@ const WINDOWS_SETTINGS = [
     'id': 'uID2',
     'width': 300,
     'height': 100,
-    'topIndent': 300,
-    'leftIndent': 300,
+    'topIndent': 75,
+    'leftIndent': 250,
     'title': 'Title 2'
   },
   {
     'id': 'uID3',
     'width': 300,
     'height': 100,
-    'topIndent': 100,
-    'leftIndent': 300,
+    'topIndent': 150,
+    'leftIndent': 500,
     'title': 'Title 3'
   },
   {
     'id': 'uID4',
     'width': 300,
     'height': 100,
-    'topIndent': 100,
-    'leftIndent': 300,
+    'topIndent': 225,
+    'leftIndent': 750,
     'title': 'Title 4'
   }
 ]
@@ -57,7 +59,7 @@ export default {
   },
   data () {
     return {
-      msg: 'Dynamic desktop!',
+      msg: 'Dynamic desktop',
       windows: localStorage.getItem('windows') ? JSON.parse(localStorage.getItem('windows')) : WINDOWS_SETTINGS
     }
   },
@@ -66,6 +68,7 @@ export default {
   },
   methods: {
     updateLocalStorage () {
+      // Updating existing windows
       localStorage.setItem('windows', JSON.stringify(this.windows))
     },
     onWindowRemove (id) {

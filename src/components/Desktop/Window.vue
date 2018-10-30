@@ -6,6 +6,9 @@
       :x = "windowSettings.leftIndent"
       :y = "windowSettings.topIndent"
       drag-handle=".resizable-window__header"
+      :minh="100"
+      :minw="200"
+      :active.sync="activeWindow"
       @dragstop="onDragStop"
       @resizestop="onResizeStop"
       :parent="true">
@@ -13,7 +16,7 @@
           <i class="window close icon red" @click="$emit('remove-window', windowSettings.id)"></i>
           <span class="heading">{{windowSettings.title}}</span>
         </div>
-        <div class="resizable-window__content">
+        <div class="resizable-window__content" @click="activateWindow">
           <p>Window with params <b>height: </b>{{windowSettings.height}} <b>width: </b>{{windowSettings.width}}</p>
         </div>
     </vue-draggable-resizable>
@@ -34,6 +37,7 @@ export default {
   },
   data: function () {
     return {
+      activeWindow: false,
       windowSettings: {
         id: this.id,
         width: this.width,
@@ -51,6 +55,9 @@ export default {
     }
   },
   methods: {
+    activateWindow: function () {
+      this.activeWindow = true
+    },
     onDragStop (left, top) {
       this.windowSettings.leftIndent = left
       this.windowSettings.topIndent = top
@@ -77,6 +84,7 @@ export default {
     border: 1px solid rgba(34,36,38,.15);
     background: #FFF;
     border-radius: .28rem;
+    text-align: center;
   }
   .resizable-window.active {
     border-color: #3db1ff;
@@ -90,12 +98,16 @@ export default {
     border-bottom: 1px solid rgba(34,36,38,.15);
     height: 25px;
     padding-top: 2px;
+    background: rgba(34,36,38,.15);
+    cursor: -webkit-grab;
   }
   .heading {
     font-weight: bold;
+    cursor: -webkit-grab;
   }
   .resizable-window__content {
     padding: 20px;
+    height: calc(100% - 25px);
   }
   .close {
     float: left;
