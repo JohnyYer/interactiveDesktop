@@ -39,10 +39,6 @@ export default {
   beforeMount () {
     this.getWindowSettings()
   },
-  beforeDestroy () {
-    console.log(this.id)
-
-  },
   methods: {
     activateWindow: function () {
       this.activeWindow = true

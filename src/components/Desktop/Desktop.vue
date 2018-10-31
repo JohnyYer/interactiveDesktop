@@ -1,50 +1,20 @@
 <template>
   <div>
     <h1>{{ msg }}</h1>
+    <button class="positive ui button" v-if="deletedWindows.length > 0" @click="windowRestore">Restore deleted window</button>
     <div class="ui segment desktop">
-    <interactive-window v-for="window in windows" :key="window.id" :id="window.id"
-                        v-on:remove-window="onWindowRemove">
-    </interactive-window>
+      <interactive-window
+        v-for="window in windows" :key="window.id"
+        :id="window.id"
+        v-on:remove-window="onWindowRemove">
+      </interactive-window>
   </div>
   </div>
 </template>
 
 <script>
 import InteractiveWindow from '@/components/Desktop/Window'
-const WINDOWS_SETTINGS = [
-  {
-    'id': 'uID1',
-    'width': 300,
-    'height': 100,
-    'topIndent': 0,
-    'leftIndent': 0,
-    'title': 'Title 1'
-  },
-  {
-    'id': 'uID2',
-    'width': 300,
-    'height': 100,
-    'topIndent': 75,
-    'leftIndent': 250,
-    'title': 'Title 2'
-  },
-  {
-    'id': 'uID3',
-    'width': 300,
-    'height': 100,
-    'topIndent': 150,
-    'leftIndent': 500,
-    'title': 'Title 3'
-  },
-  {
-    'id': 'uID4',
-    'width': 300,
-    'height': 100,
-    'topIndent': 225,
-    'leftIndent': 750,
-    'title': 'Title 4'
-  }
-]
+import WINDOWS_SETTINGS from '@/components/Desktop/config'
 
 export default {
   name: 'Desktop',
@@ -54,21 +24,35 @@ export default {
   data () {
     return {
       msg: 'Dynamic desktop',
-      windows: localStorage.getItem('windows') ? JSON.parse(localStorage.getItem('windows')) : WINDOWS_SETTINGS
+      windows: localStorage.getItem('windows') ? JSON.parse(localStorage.getItem('windows')) : WINDOWS_SETTINGS,
+      deletedWindows: localStorage.getItem('deletedWindows') ? JSON.parse(localStorage.getItem('deletedWindows')) : []
+    }
+  },
+  watch: {
+    windows (val) {
+      localStorage.setItem('windows', JSON.stringify(val))
+    },
+    deletedWindows (val) {
+      localStorage.setItem('deletedWindows', JSON.stringify(val))
     }
   },
   beforeMount () {
-    this.updateLocalStorage()
+    localStorage.setItem('windows', JSON.stringify(this.windows))
+    localStorage.setItem('deletedWindows', JSON.stringify(this.deletedWindows))
   },
   methods: {
-    updateLocalStorage () {
-      // Updating existing windows
-      localStorage.setItem('windows', JSON.stringify(this.windows))
-    },
     onWindowRemove (id) {
       let removedWindowIndex = this.windows.findIndex(el => el.id === id)
       this.windows.splice(removedWindowIndex, 1)
-      this.updateLocalStorage()
+      this.deletedWindows.push(id)
+    },
+    windowRestore () {
+      // detecting last deleted window
+      let restoredWindowId = this.deletedWindows[this.deletedWindows.length - 1]
+      // get default settings for restored window
+      let restoredWindow = WINDOWS_SETTINGS.find(el => el.id === restoredWindowId)
+      this.windows.push(restoredWindow)
+      this.deletedWindows.splice(this.deletedWindows.length - 1, 1)
     }
   }
 }

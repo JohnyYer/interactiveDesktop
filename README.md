@@ -2,6 +2,13 @@
 
 > Interactive desktop for blockchain platform
 
+* Изначальная конфигурация окон храниться в файле `src/components/Desktop/config.js`
+* Окна меняют размер и перетягиваются
+* Если окна удалялись, появляется кнопка "Restore deleted window" которая вернет
+  последнее удаленное окно и сбросит сбросит его настройки до начальной конфигурации
+  указвнной в вайле `config.js`
+
+
 ## Build Setup
 
 ``` bash
