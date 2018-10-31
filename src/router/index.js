@@ -6,6 +6,7 @@ import TransactionStatus from '@/components/TransactionStatus'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -13,7 +14,7 @@ export default new Router({
       component: Desktop
     },
     {
-      path: 'transactions',
+      path: '/transactions',
       name: 'TransactionStatus',
       component: TransactionStatus
     }
