@@ -2,13 +2,7 @@
   <div>
     <h1>{{ msg }}</h1>
     <div class="ui segment desktop">
-    <interactive-window v-for="window in windows" :key="window.id"
-                        :width="window.width"
-                        :height="window.height"
-                        :top="window.topIndent"
-                        :left="window.leftIndent"
-                        :title="window.title"
-                        :id="window.id"
+    <interactive-window v-for="window in windows" :key="window.id" :id="window.id"
                         v-on:remove-window="onWindowRemove">
     </interactive-window>
   </div>
@@ -63,7 +57,7 @@ export default {
       windows: localStorage.getItem('windows') ? JSON.parse(localStorage.getItem('windows')) : WINDOWS_SETTINGS
     }
   },
-  mounted () {
+  beforeMount () {
     this.updateLocalStorage()
   },
   methods: {

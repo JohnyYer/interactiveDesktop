@@ -28,31 +28,20 @@ import VueDraggableResizable from 'vue-draggable-resizable'
 export default {
   components: {VueDraggableResizable},
   props: {
-    width: {type: Number, default: 300},
-    height: {type: Number, default: 100},
-    left: {type: Number, default: 0},
-    top: {type: Number, default: 0},
-    title: {type: String, default: 'Default title'},
     id: {type: String}
   },
   data: function () {
     return {
       activeWindow: false,
-      windowSettings: {
-        id: this.id,
-        width: this.width,
-        height: this.height,
-        leftIndent: this.left,
-        topIndent: this.top,
-        title: this.title
-      }
+      windowSettings: {}
     }
   },
   beforeMount () {
-    if (localStorage.getItem('windows')) {
-      const windows = JSON.parse(localStorage.getItem('windows'))
-      this.windowSettings = windows.find(el => el.id === this.windowSettings.id)
-    }
+    this.getWindowSettings()
+  },
+  beforeDestroy () {
+    console.log(this.id)
+
   },
   methods: {
     activateWindow: function () {
@@ -66,13 +55,19 @@ export default {
     onResizeStop (left, top, width, height) {
       this.windowSettings.width = width
       this.windowSettings.height = height
+      this.windowSettings.leftIndent = left
+      this.windowSettings.topIndent = top
       this.saveWindowSettings()
     },
+    getWindowSettings () {
+      const windows = JSON.parse(localStorage.getItem('windows'))
+      this.windowSettings = windows.find(el => el.id === this.id)
+    },
     saveWindowSettings () {
-      let storedWindows = JSON.parse(localStorage.getItem('windows'))
-      let currentWindowIndex = storedWindows.findIndex(el => el.id === this.windowSettings.id)
-      storedWindows[currentWindowIndex] = this.windowSettings
-      localStorage.setItem('windows', JSON.stringify(storedWindows))
+      let windows = JSON.parse(localStorage.getItem('windows'))
+      let currentWindowIndex = windows.findIndex(el => el.id === this.id)
+      windows[currentWindowIndex] = this.windowSettings
+      localStorage.setItem('windows', JSON.stringify(windows))
     }
   }
 }
